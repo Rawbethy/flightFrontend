@@ -11,9 +11,13 @@ const AutofillInput = ({dest}: {dest: string}) => {
     const [selectedAirport, setSelectedAirport] = useState<string | string[] | null>(null);
     const [hoverOptionIndex, setHoverOptionIndex] = useState<number>(-1);
     const [currListLen, setCurrListLen] = useState<number>(-1);
-    const {portDict, setValues} = useContext(ContextData);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     
+    const contextData = useContext(ContextData);
+    const portDict: {[key: string]: string[]} = contextData?.portDict || {};
+    const {setValues} = contextData || {
+        setValues: () => {}
+    }
 
     const getCurrListLen = (list: string[]) => {
         var len = 0;

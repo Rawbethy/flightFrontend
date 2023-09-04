@@ -1,3 +1,57 @@
-.loginMain h1 {
+form {
+    position: relative;
+    display: flex;
+    height: auto;
+    max-width: 450px;
+    border-radius: 10px;
+}
+
+.formMain {
+    width: 100%;
+}
+
+.formMain h2, .inputLabel label {
     color: white;
+}
+
+.formMain h2 {
+    margin-top: 5%;
+}
+
+.inputBox {
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+.submitButton {
+    opacity: 1;
+    background-color: green;
+    color: white;
+    width: 20%;
+    max-width: 100px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    border-color: transparent;
+    border-radius: 10px;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.submitButton:hover {
+    cursor: pointer;
+    opacity: .6
+}
+
+.signupOption {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.signupOption p{
+    color: white;
+    margin: 0px;
+}
+
+.signupOption a:hover {
+    cursor: pointer;
+    color: green
 }

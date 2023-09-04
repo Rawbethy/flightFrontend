@@ -3,8 +3,8 @@ import '../styles/signup.css'
 
 export default function SignUp() {
     return (
-        <div className="loginMain">
-            <h1>This is the Login Component</h1>
+        <div className="signupMain">
+            <h1>This is the Sign Up Component</h1>
         </div>
     )
 }

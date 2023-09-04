@@ -7,7 +7,7 @@ import './App.css';
 import siteRoutes from './Routes';
 import Navbar from './components/views/Navbar';
 
-interface contextData {
+interface ContextData {
   portDict: {[key: string]: string[]},
   values: {
     depCity: String,
@@ -17,40 +17,47 @@ interface contextData {
     arrPort: string | string[],
     retDate: string
   },
-  setValues: React.Dispatch<React.SetStateAction<contextData['values']>>;
+  setValues: React.Dispatch<React.SetStateAction<ContextData['values']>>;
 }
 
-
-export const ContextData = createContext<contextData>({
-  portDict: {},
-  values: {
-    depCity: '',
-    depPort: '',
-    depDate: DateFormat(new Date()),
-    arrCity: '',
-    arrPort: '',
-    retDate: DateFormat(new Date())
+interface UserData {
+  userStatus: {
+    username: string | null,
+    status: boolean
   },
-  setValues:() => {}
-})
+  setUserStatus: React.Dispatch<React.SetStateAction<UserData['userStatus']>>;
+}
 
+export const ContextData = createContext<ContextData | undefined>(undefined);
+export const UserData = createContext<UserData | undefined>(undefined);
 
 export default function App() {
 
-  const [portDict, setDict] = useState<{ [key: string]: string[] }>({});
-  const [values, setValues] = useState<contextData['values']>({
-    depCity: '',
-    depPort: '',
-    depDate: DateFormat(new Date()),
-    arrCity: '',
-    arrPort: '',
-    retDate: DateFormat(new Date())
+  const [flightValues, setFlightValues] = useState<ContextData>({
+    portDict: {},
+    values: {
+      depCity: '',
+      depPort: '',
+      depDate: DateFormat(new Date()),
+      arrCity: '',
+      arrPort: '',
+      retDate: DateFormat(new Date())
+    },
+    setValues: () => {}
+  })
+
+  const [userStatus, setUserStatus] = useState<UserData['userStatus']>({
+    username: null,
+    status: false
   })
 
   useEffect(() => {
     const fetchDict = async() => {
         axios.get('http://ec2-18-188-4-231.us-east-2.compute.amazonaws.com:8080/airlineCodes').then(res => {
-            setDict(res.data);
+            setFlightValues((prevState) => ({
+              ...prevState,
+              portDict: res.data
+            }));
         }).catch(err => {
             console.log(err)
         })
@@ -59,23 +66,23 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    setDict(portDict);
-    setValues(values);
-  }, [portDict, values])
+    setFlightValues(flightValues);
+  }, [flightValues])
 
   return (
-
-    <ContextData.Provider value={{portDict, values, setValues}}>
-      <div className="App">
-        <Router>
-          <Navbar />
-          <Routes>
-            {siteRoutes.map((route, index) => (
-              <Route key={index} path={route.path} Component={route.component}></Route>
-            ))}
-          </Routes>
-        </Router>
-      </div>
-    </ContextData.Provider>
+    <UserData.Provider value={{userStatus: userStatus, setUserStatus: setUserStatus}}>
+      <ContextData.Provider value={{values: flightValues.values, portDict: flightValues.portDict, setValues: flightValues.setValues}}>
+        <div className="App">
+          <Router>
+            <Navbar />
+            <Routes>
+              {siteRoutes.map((route, index) => (
+                <Route key={index} path={route.path} Component={route.component}></Route>
+              ))}
+            </Routes>
+          </Router>
+        </div>
+      </ContextData.Provider>
+    </UserData.Provider>
   );
 }

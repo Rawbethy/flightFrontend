@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, FormEvent} from 'react';
 import { BeatLoader } from 'react-spinners';
 import AutofillInput from '../Utils/autofill';
-import {ContextData} from '../../App'
+import {ContextData, UserData} from '../../App'
 import {DateFormat, AddDays, MonthFirstDate} from '../Utils/DateFormat';
 import axios from 'axios';
 
@@ -29,6 +29,23 @@ interface CardInfo {
 }
 
 export default function Form() {
+
+    const {values, setValues} = useContext(ContextData) || {
+        values: {
+            depCity: '', 
+            depPort: '',
+            depDate: '',
+            arrCity: '',
+            arrPort: '',
+            retDate: ''
+        },
+        setValues: () => {}
+    };
+
+    const {userStatus, setUserStatus} = useContext(UserData) || {
+        username: null,
+        status: false
+    }
 
     const parseTime = (timeString: string) => {
         const [time, ampm] = timeString.split(' ');
@@ -85,8 +102,6 @@ export default function Form() {
         })
         return sortedResults;
     }
-
-    const {values, setValues} = useContext(ContextData);
 
     const [errors, setErrors] = useState({
         dates: ''
