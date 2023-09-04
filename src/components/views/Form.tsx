@@ -148,7 +148,6 @@ export default function Form() {
         setValues(values);
         validateDates(values);
         setResults(results);
-        console.log(results);
     }, [values, results]);
 
     const currDate = DateFormat(new Date());
