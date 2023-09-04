@@ -49,7 +49,7 @@ export default function App() {
 
   useEffect(() => {
     const fetchDict = async() => {
-        axios.get('http://localhost:8080/airlineCodes').then(res => {
+        axios.get('http://ec2-18-188-4-231.us-east-2.compute.amazonaws.com:8080/airlineCodes').then(res => {
             setDict(res.data);
         }).catch(err => {
             console.log(err)

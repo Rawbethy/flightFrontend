@@ -130,7 +130,7 @@ export default function Form() {
         e.preventDefault();
         try {
             setIsLoading(true);
-            const res = await axios.post('http://localhost:8080/airlineAPI', {
+            const res = await axios.post('http://ec2-18-188-4-231.us-east-2.compute.amazonaws.com:8080/airlineAPI', {
                 depPort: values.depPort,
                 arrPort: values.arrPort,
                 depDate: values.depDate,
@@ -217,7 +217,7 @@ export default function Form() {
                                         <div className="depTimes">
                                             <span>{entryValue.depTimes[0]} - {entryValue.depTimes[1]}</span>
                                             <div className="stops">
-                                                <h3>{entryValue.layoversTo.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layovers`}</h3>
+                                                <h3>{entryValue.layoversTo.layoverCount === 'nonstop' ? 'Nonstop' : entryValue.layoversTo.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layovers`}</h3>
                                                 <div className="layover">
                                                 {entryValue.layoversTo.layoverPorts.map((currPort, index) => (
                                                     <div className="layoverEntry">
@@ -243,7 +243,7 @@ export default function Form() {
                                         <div className="retTimes">
                                             <span>{entryValue.retTimes[0]} - {entryValue.retTimes[1]}</span>
                                             <div className="stops">
-                                                <h3>{entryValue.layoversFrom.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layovers`}</h3>
+                                                <h3>{entryValue.layoversFrom.layoverCount === 'nonstop' ? 'Nonstop' : entryValue.layoversFrom.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layovers`}</h3>
                                                 <div className="layover">
                                                 {entryValue.layoversFrom.layoverPorts.map((currPort, index) => (
                                                     <div className="layoverEntry">
