@@ -40,9 +40,10 @@ const formStyles: React.CSSProperties = {
     marginRight: 'auto',
     marginTop: '30px',
     marginBottom: '30px',
-    width: '60%',
+    padding: '40px',
+    width: '50%',
     minWidth: '350px',
-    height: '300px',
+    height: '250px',
     borderStyle: 'solid',
     borderColor: 'rgba(245, 245, 245, 0.648)',
     borderWidth: '4px'
