@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, FormEvent} from 'react';
 import { BeatLoader } from 'react-spinners';
 import AutofillInput from '../Utils/autofill';
-import {ContextData, UserData} from '../../App'
+import {IContextData, ContextData, UserData} from '../../App'
 import {DateFormat, AddDays, MonthFirstDate} from '../Utils/DateFormat';
 import axios from 'axios';
 
@@ -34,19 +34,29 @@ interface CardInfo {
     price: string
 }
 
-const formStyles: React.CSSProperties = {
+const commonFormStyles: React.CSSProperties = {
     position: 'relative',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: '30px',
     marginBottom: '30px',
-    padding: '40px',
-    width: '50%',
-    minWidth: '350px',
-    height: '250px',
     borderStyle: 'solid',
     borderColor: 'rgba(245, 245, 245, 0.648)',
     borderWidth: '4px'
+}
+
+const formStyles: React.CSSProperties = window.innerWidth < 768 ? {
+    ...commonFormStyles,
+    padding: '10px',
+    width: '85%',
+    minWidth: '50px',
+    height: '35vh'
+} : {
+    ...commonFormStyles,
+    padding: '40px',
+    width: '50%',
+    minWidth: '350px',
+    height: '200px'
 }
 
 export default function Form() {
@@ -111,26 +121,48 @@ export default function Form() {
     }
 
     const [errors, setErrors] = useState({
-        dates: ''
+        depCity: '',
+        arrCity: '',
+        dates: '',
     });
 
     const [results, setResults] = useState<Record<string, CardInfo>>({});
     const [sortingOption, setSortingOption] = useState("priceL2H");
     const [isLoading, setIsLoading] = useState(false);
 
-    function validateDates(values: any) {
-        if(values['depDate'] > values['retDate']) {
-            setErrors(errors => ({
-                ...errors,
-                dates: 'Return date needs to be after departure date'
-            }))
+    const handleErrors = (depDate: string, retDate: string, depCity: string, arrCity: string) => {
+        let newErrors = {
+            depCity: '',
+            arrCity: '',
+            dates: ''
+        };
+
+        if(depDate > retDate) {
+            newErrors = {
+                ...newErrors,
+                dates: 'Return date needs to be after departure date',
+            };
         }
-        else if(errors.dates !== '' && values['depDate'] < values['retDate']) {
-            setErrors(errors => ({
-                ...errors,
-                dates: ''
-            }))
+
+        if(depCity === '') {
+            newErrors = {
+                ...newErrors,
+                depCity: 'Departure city not specified!',
+            };
         }
+
+        if(arrCity === '') {
+            newErrors = {
+                ...newErrors,
+                arrCity: 'Arrival city not specified!',
+            };
+        }
+
+        // setErrors((prevErrors) => ({
+        //     ...prevErrors,
+        //     ...newErrors
+        // }));
+        return newErrors;
     }
 
     function handleDateUpdate(e: React.ChangeEvent<HTMLInputElement>) {
@@ -150,25 +182,38 @@ export default function Form() {
 
     const handleSubmit = async(e: FormEvent) => {
         e.preventDefault();
-        try {
-            setIsLoading(true);
-            const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
-                depPort: values.depPort,
-                arrPort: values.arrPort,
-                depDate: values.depDate,
-                retDate: values.retDate
-            });
-            setResults(res.data);        
-        } catch (error) {
-            alert(error);
-        } finally {
-            setIsLoading(false);
+        const errors = handleErrors(values.depDate, values.retDate, values.depCity, values.arrCity);
+        if(errors.depCity !== '' || errors.arrCity !== '' || errors.dates !== '') {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                ...errors
+            }))
+           return;
+        }
+        else {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                ...errors
+            }))
+            try {
+                setIsLoading(true);
+                const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
+                    depPort: values.depPort,
+                    arrPort: values.arrPort,
+                    depDate: values.depDate,
+                    retDate: values.retDate
+                });
+                setResults(res.data);        
+            } catch (error) {
+                alert(error);
+            } finally {
+                setIsLoading(false);
+            }
         }
     }
 
     useEffect(() => {
         setValues(values);
-        validateDates(values);
         setResults(results);
     }, [values, results]);
 
@@ -182,23 +227,29 @@ export default function Form() {
                         <div className='cityInput'>
                             <label htmlFor="">Departure City</label>
                             <AutofillInput dest='depCity'/>
+                            <div className="errorMsg">
+                                {errors.depCity && <span style={{position: 'relative', color: 'red', fontSize: '14px', padding: '10px 0'}}>{errors.depCity}</span>}
+                            </div>
                         </div>
                         <div className='cityInput'>
                             <label htmlFor="">Arrival City</label>
                             <AutofillInput dest='arrCity'/>
+                            <div className="errorMsg">
+                                {errors.arrCity && <span style={{position: 'relative', color: 'red', fontSize: '14px', padding: '10px 0'}}>{errors.arrCity}</span>}
+                            </div>
                         </div>
                     </div>
                     <br />
                     <div className='dates'>
                         <div className='depDate'>
                             <label htmlFor="">Departure Date</label>
-                            <div>
+                            <div className='dateInput'>
                                 <input value={values.depDate} type="date" name='depDate' min={currDate} onChange={handleDateUpdate}/>
                             </div>                       
                         </div>
                         <div className='retDate'>
                             <label htmlFor="">Return Date</label>
-                            <div>
+                            <div className='dateInput'>
                                 <input value={values.retDate} type="date" name='retDate' min={currDate} onChange={handleDateUpdate}/>
                             </div>
                         </div>
@@ -232,9 +283,11 @@ export default function Form() {
                             <div className="card" key={index}>
                                 <div className="cardInfo">
                                     <div className="depInfo">
-                                        <div className="genInfo" style={{marginBottom: '10px'}}>
-                                            <h2 style={{margin: '0px', fontSize: '20px'}}>From {entryValue.ports['depTO'][0]}</h2>
-                                            <h4 style={{margin: '0px'}}>({entryValue.ports['depTO'][1]})</h4>
+                                        <div className="genInfo">
+                                            <h2>From {entryValue.ports['depTO'][0]}</h2>
+                                            {window.innerWidth > 768 && (
+                                                <h4>({entryValue.ports['depTO'][1]})</h4>
+                                            )}
                                             <div className="date">
                                                 <span>{MonthFirstDate(values.depDate)}</span>
                                             </div>
@@ -244,8 +297,8 @@ export default function Form() {
                                             <span><b>Departure Airline:</b> {entryValue.depAirline}</span>
                                         </div>
                                         <div className="depTimes">
-                                            <div className="travelTime" style={{margin: '10px'}}>
-                                                <span><b>Departure Travel Time: {entryValue.depFlightLen}</b></span>
+                                            <div className="travelTime">
+                                                <span><b>Departure Travel Time:</b> {entryValue.depFlightLen}</span>
                                             </div>
                                             <div className="stops">
                                                 <h3>{entryValue.layoversTo.layoverCount === 'nonstop' ? 'Nonstop' : entryValue.layoversTo.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layovers`}</h3>
@@ -261,14 +314,18 @@ export default function Form() {
                                                 ))}
                                                 </div>
                                             </div>
+                                            <h2>To {entryValue.ports['depL'][0]}</h2>
+                                            {window.innerWidth > 768 && (
+                                                <h4>({entryValue.ports['depL'][1]})</h4>
+                                            )}
                                         </div>
-                                        <h2 style={{margin: '0px', fontSize: '20px'}}>To {entryValue.ports['depL'][0]}</h2>
-                                        <h4 style={{margin: '0px'}}>({entryValue.ports['depL'][1]})</h4>
                                     </div>
                                     <div className="retInfo">
-                                        <div className="genInfo" style={{marginBottom: '10px'}}>
-                                            <h2 style={{margin: '0px', fontSize: '20px'}}>From {entryValue.ports['retTO'][0]}</h2>
-                                            <h4 style={{margin: '0px'}}>({entryValue.ports['retTO'][1]})</h4>
+                                        <div className="genInfo">
+                                            <h2>From {entryValue.ports['retTO'][0]}</h2>
+                                            {window.innerWidth > 768 && (
+                                                <h4>({entryValue.ports['retTO'][1]})</h4>
+                                            )}
                                             <div className="date">
                                                 <span>{MonthFirstDate(values.retDate)}</span>
                                             </div>
@@ -278,8 +335,8 @@ export default function Form() {
                                             <span><b>Return Airline:</b> {entryValue.depAirline}</span>
                                         </div>
                                         <div className="retTimes">
-                                            <div className="travelTime" style={{margin: '10px'}}>
-                                                <span><b>Return Travel Time: {entryValue.retFlightLen}</b></span>
+                                            <div className="travelTime">
+                                                <span><b>Return Travel Time:</b> {entryValue.retFlightLen}</span>
                                             </div>
                                             <div className="stops">
                                                 <h3>{entryValue.layoversFrom.layoverCount === 'nonstop' ? 'Nonstop' : entryValue.layoversFrom.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layovers`}</h3>
@@ -295,9 +352,11 @@ export default function Form() {
                                                 ))}
                                                 </div>
                                             </div>                                           
+                                            <h2>To {entryValue.ports['retL'][0]}</h2>
+                                            {window.innerWidth > 768 && (
+                                                <h4>({entryValue.ports['retL'][1]})</h4>
+                                            )}
                                         </div>
-                                        <h2 style={{margin: '0px', fontSize: '20px'}}>To {entryValue.ports['retL'][0]}</h2>
-                                        <h4 style={{margin: '0px'}}>({entryValue.ports['retL'][1]})</h4>
                                     </div>
                                 </div>
                                 <div className="pricing">

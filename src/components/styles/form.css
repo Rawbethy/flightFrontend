@@ -6,10 +6,10 @@
     width: 100%;
 }
 
+
 .cities {
     position: relative;
-    display: flex;
-
+    display: flex;  
 }
 
 .airline-results {
@@ -59,7 +59,7 @@
     color: white;
 }
 
-.cityInput label {
+.cityInput label, .dates label {
     position: relative;
     display: flex;
     justify-content: center;
@@ -87,7 +87,7 @@
 
 .dropdown {
     position: absolute;
-    top: 100%;
+    top: 60%;
     width: 40%;
     margin: auto;
     background-color: rgb(220, 219, 219);
@@ -133,6 +133,14 @@
 
 /* Section for cards to display information on flights*/
 
+.depInfo h2, .retInfo h2, .depInfo h4, .retInfo h4 {
+    margin: 0px
+}
+
+.depInfo h2, .retInfo h2 {
+    font-size: 20px;
+}
+
 .cards {
     display: flex;
     flex-direction: column;
@@ -152,7 +160,7 @@
     border-radius: 40px;
     border-style: dashed;
     border-color: rgb(54, 54, 54);
-    padding: 20px;
+    padding: 15px;
 }
 
 .card::before,
@@ -189,6 +197,10 @@
     margin-right: 15%;
 }
 
+.genInfo {
+   margin-bottom: 10px; 
+}
+
 .depInfo, .retInfo {
     display: flex;
     flex-direction: column;
@@ -196,6 +208,10 @@
     width: 45%;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.travelTime {
+    margin: 10px;
 }
 
 .stops {
@@ -223,5 +239,68 @@
 
 .layover h5, .stops h3 {
     margin: 0
+}
+
+@media screen and (min-width: 0px) and (max-width: 768px) {
+    .form-container {
+        width: 100vw
+    }
+
+    .cityInput label, .dates label{
+        font-size: 13px;
+    }
+
+    .dateInput input{
+        width: 75%;
+    }
+
+    .cityButton, .portButton {
+        font-size: 9px;
+    }
+
+    .cards {
+        width: 100%;
+    }
+
+    .card {
+        width: 80%;
+        height: 240px;
+        min-width: 30px;
+        max-width: 220px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 10px;
+        padding-right: 10px
+    }
+
+    .genInfo, .genInfo h2, .depAirline, .retAirline, .depTimes, .retTimes, .depTimes h2, .retTimes h2, .pricing {
+        font-size: 10px;
+    }
+
+    .genInfo {
+        margin-bottom: 2px;
+    }
+
+    .depAirline {
+        height: 20px;
+    }
+
+    .travelTime {
+        height: 15px;
+    }
+    
+    .pricing h2 {
+        margin: 0px;
+    }
+
+    .deals button {
+        font-size: 10px;
+        height: 15px;
+        width: 80px;
+    }
+
+    /* .genInfo h2, .genInfo h4, .genInfo span, .depAirline span, .retAirline span, .travelTime span, .stops h3, .layoverEntry h5, .layoverEntry span{
+        font-size: 10px;
+    } */
 }
 

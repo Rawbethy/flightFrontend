@@ -7,7 +7,7 @@ import './App.css';
 import siteRoutes from './Routes';
 import Navbar from './components/views/Navbar';
 
-interface ContextData {
+export interface IContextData {
   portDict: {[key: string]: string[]},
   values: {
     depCity: string,
@@ -17,18 +17,18 @@ interface ContextData {
     arrPort: string | string[],
     retDate: string
   },
-  setValues: React.Dispatch<React.SetStateAction<ContextData['values']>>;
+  setValues: React.Dispatch<React.SetStateAction<IContextData['values']>>;
 }
 
-interface UserData {
+export interface IUserData {
   userStatus: {
     username: string | null,
     status: boolean
   },
-  setUserStatus: React.Dispatch<React.SetStateAction<UserData['userStatus']>>;
+  setUserStatus: React.Dispatch<React.SetStateAction<IUserData['userStatus']>>;
 }
 
-export const ContextData = createContext<ContextData>({
+export const ContextData = createContext<IContextData>({
   portDict: {},
   values: {
     depCity: '',
@@ -41,7 +41,7 @@ export const ContextData = createContext<ContextData>({
   setValues: () => {}
 });
 
-export const UserData = createContext<UserData>({
+export const UserData = createContext<IUserData>({
   userStatus: {
     username: null,
     status: false 
@@ -51,7 +51,7 @@ export const UserData = createContext<UserData>({
 
 export default function App() {
 
-  const [values, setValues] = useState<ContextData['values']>({
+  const [values, setValues] = useState<IContextData['values']>({
     depCity: '',
     depPort: '',
     depDate: DateFormat(new Date()),
@@ -60,9 +60,9 @@ export default function App() {
     retDate: DateFormat(new Date())
   });
 
-  const [portDict, setPortDict] = useState<ContextData['portDict']>({});
+  const [portDict, setPortDict] = useState<IContextData['portDict']>({});
 
-  const [userStatus, setUserStatus] = useState<UserData['userStatus']>({
+  const [userStatus, setUserStatus] = useState<IUserData['userStatus']>({
     username: null,
     status: false
   });
