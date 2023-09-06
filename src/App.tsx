@@ -1,4 +1,4 @@
-import React, {useState, useEffect, createContext} from 'react';
+import React, {useState, useEffect, createContext, useContext, SetStateAction} from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {DateFormat} from './components/Utils/DateFormat';
 import axios from 'axios';
@@ -10,10 +10,10 @@ import Navbar from './components/views/Navbar';
 interface ContextData {
   portDict: {[key: string]: string[]},
   values: {
-    depCity: String,
+    depCity: string,
     depPort: string | string[],
     depDate: string,
-    arrCity: String,
+    arrCity: string,
     arrPort: string | string[],
     retDate: string
   },
@@ -28,50 +28,65 @@ interface UserData {
   setUserStatus: React.Dispatch<React.SetStateAction<UserData['userStatus']>>;
 }
 
-export const ContextData = createContext<ContextData | undefined>(undefined);
-export const UserData = createContext<UserData | undefined>(undefined);
+export const ContextData = createContext<ContextData>({
+  portDict: {},
+  values: {
+    depCity: '',
+    depPort: '',
+    depDate: DateFormat(new Date()),
+    arrCity: '',
+    arrPort: '',
+    retDate: DateFormat(new Date())
+  },
+  setValues: () => {}
+});
+
+export const UserData = createContext<UserData>({
+  userStatus: {
+    username: null,
+    status: false 
+  },
+  setUserStatus: () => {}
+});
 
 export default function App() {
 
-  const [flightValues, setFlightValues] = useState<ContextData>({
-    portDict: {},
-    values: {
-      depCity: '',
-      depPort: '',
-      depDate: DateFormat(new Date()),
-      arrCity: '',
-      arrPort: '',
-      retDate: DateFormat(new Date())
-    },
-    setValues: () => {}
-  })
+  const [values, setValues] = useState<ContextData['values']>({
+    depCity: '',
+    depPort: '',
+    depDate: DateFormat(new Date()),
+    arrCity: '',
+    arrPort: '',
+    retDate: DateFormat(new Date())
+  });
+
+  const [portDict, setPortDict] = useState<ContextData['portDict']>({});
 
   const [userStatus, setUserStatus] = useState<UserData['userStatus']>({
     username: null,
     status: false
-  })
+  });
 
   useEffect(() => {
     const fetchDict = async() => {
         axios.get('http://ec2-18-188-4-231.us-east-2.compute.amazonaws.com:8080/airlineCodes').then(res => {
-            setFlightValues((prevState) => ({
-              ...prevState,
-              portDict: res.data
-            }));
+          const newData: {[key: string]: string[]} = res.data
+          setPortDict(newData);
         }).catch(err => {
-            console.log(err)
+          console.log(err)
         })
     }
     fetchDict();
   }, [])
 
   useEffect(() => {
-    setFlightValues(flightValues);
-  }, [flightValues])
+    setValues(values);
+    setPortDict(portDict);
+  }, [values, portDict])
 
   return (
-    <UserData.Provider value={{userStatus: userStatus, setUserStatus: setUserStatus}}>
-      <ContextData.Provider value={{values: flightValues.values, portDict: flightValues.portDict, setValues: flightValues.setValues}}>
+    <UserData.Provider value={{userStatus, setUserStatus}}>
+      <ContextData.Provider value={{values, portDict, setValues}}>
         <div className="App">
           <Router>
             <Navbar />

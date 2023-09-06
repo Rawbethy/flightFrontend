@@ -9,6 +9,19 @@ interface Credentials {
 
 export default function Login() {
 
+    const formStyles: React.CSSProperties = {
+        position: 'relative',
+        display: 'flex',
+        margin: 'auto',
+        height: 'auto',
+        maxWidth: '450px',
+        borderRadius: '10px',
+        borderStyle: 'solid',
+        borderColor: 'rgba(245, 245, 245, 0.648)',
+        borderWidth: '4px',
+        transform: 'translateY(50%)'
+    }
+
     const [creds, setCreds] = useState<Credentials>({
         username: '',
         password: ''
@@ -34,11 +47,11 @@ export default function Login() {
     if(!userData) {
         return <div>Loading or error handling...</div>
     }
-    const {setUserStatus} = userData;
+    // const {setUserStatus} = userData;
 
     return (
         <div className="loginMain">
-            <form onSubmit={submit}>
+            <form onSubmit={submit} style={formStyles}>
                 <div className="formMain">
                     <h2>Login: </h2>
                     <div className="inputBox">
@@ -53,7 +66,7 @@ export default function Login() {
                         </div>
                         <input type='password' className='textBox' id='textBox' name='password' value={creds.password} placeholder='Password' onChange={updateState}/>
                     </div>
-                    <button type='submit' className='submitButton'>Login</button>
+                    <button type='submit' className='submitButtonLogin'>Login</button>
                     <div className="signupOption">
                         <p>Don't have an account? <a href="/singup">Signup</a></p>
                     </div>

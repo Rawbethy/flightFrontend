@@ -8,6 +8,12 @@ import axios from 'axios';
 import '../styles/form.css'
 
 interface CardInfo {
+    ports: {
+        depTO: string[],
+        depL: string[],
+        retTO: string[],
+        retL: string[]
+    }
     depAirline: string,
     depTimes: string[],
     depFlightLen: string,
@@ -28,29 +34,29 @@ interface CardInfo {
     price: string
 }
 
+const formStyles: React.CSSProperties = {
+    position: 'relative',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: '30px',
+    marginBottom: '30px',
+    width: '60%',
+    minWidth: '350px',
+    height: '300px',
+    borderStyle: 'solid',
+    borderColor: 'rgba(245, 245, 245, 0.648)',
+    borderWidth: '4px'
+}
+
 export default function Form() {
 
-    const {values, setValues} = useContext(ContextData) || {
-        values: {
-            depCity: '', 
-            depPort: '',
-            depDate: '',
-            arrCity: '',
-            arrPort: '',
-            retDate: ''
-        },
-        setValues: () => {}
-    };
-
-    const {userStatus, setUserStatus} = useContext(UserData) || {
-        username: null,
-        status: false
-    }
+    const {values, setValues} = useContext(ContextData);
+    const {userStatus, setUserStatus} = useContext(UserData);
 
     const parseTime = (timeString: string) => {
         const [time, ampm] = timeString.split(' ');
         const [hours, minutes] = time.split(':').map(Number);
-        const isPM = ampm.toLowerCase() == 'pm';
+        const isPM = ampm.toLowerCase() === 'pm';
 
         let totalMinutes = hours * 60 + minutes;
         if(isPM && hours !== 12) {
@@ -170,7 +176,7 @@ export default function Form() {
     return (
         <div className="main">
             <div className="form-container">
-                <form autoComplete='off'>
+                <form autoComplete='off' style={formStyles}>
                     <div className="cities">
                         <div className='cityInput'>
                             <label htmlFor="">Departure City</label>
@@ -225,11 +231,21 @@ export default function Form() {
                             <div className="card" key={index}>
                                 <div className="cardInfo">
                                     <div className="depInfo">
+                                        <div className="genInfo" style={{marginBottom: '10px'}}>
+                                            <h2 style={{margin: '0px', fontSize: '20px'}}>From {entryValue.ports['depTO'][0]}</h2>
+                                            <h4 style={{margin: '0px'}}>({entryValue.ports['depTO'][1]})</h4>
+                                            <div className="date">
+                                                <span>{MonthFirstDate(values.depDate)}</span>
+                                            </div>
+                                            <span>{entryValue.depTimes[0]} - {entryValue.depTimes[1]}</span>
+                                        </div>
                                         <div className="depAirline">
                                             <span><b>Departure Airline:</b> {entryValue.depAirline}</span>
                                         </div>
                                         <div className="depTimes">
-                                            <span>{entryValue.depTimes[0]} - {entryValue.depTimes[1]}</span>
+                                            <div className="travelTime" style={{margin: '10px'}}>
+                                                <span><b>Departure Travel Time: {entryValue.depFlightLen}</b></span>
+                                            </div>
                                             <div className="stops">
                                                 <h3>{entryValue.layoversTo.layoverCount === 'nonstop' ? 'Nonstop' : entryValue.layoversTo.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversTo.layoverCount.slice(0, 1)} Layovers`}</h3>
                                                 <div className="layover">
@@ -244,18 +260,26 @@ export default function Form() {
                                                 ))}
                                                 </div>
                                             </div>
-                                            <span><b>Departure Travel Time: {entryValue.depFlightLen}</b></span>
-                                            <div className="date">
-                                                <span>{MonthFirstDate(values.depDate)}</span>
-                                            </div>
                                         </div>
+                                        <h2 style={{margin: '0px', fontSize: '20px'}}>To {entryValue.ports['depL'][0]}</h2>
+                                        <h4 style={{margin: '0px'}}>({entryValue.ports['depL'][1]})</h4>
                                     </div>
                                     <div className="retInfo">
+                                        <div className="genInfo" style={{marginBottom: '10px'}}>
+                                            <h2 style={{margin: '0px', fontSize: '20px'}}>From {entryValue.ports['retTO'][0]}</h2>
+                                            <h4 style={{margin: '0px'}}>({entryValue.ports['retTO'][1]})</h4>
+                                            <div className="date">
+                                                <span>{MonthFirstDate(values.retDate)}</span>
+                                            </div>
+                                            <span>{entryValue.retTimes[0]} - {entryValue.retTimes[1]}</span>
+                                        </div>
                                         <div className="retAirline">
                                             <span><b>Return Airline:</b> {entryValue.depAirline}</span>
                                         </div>
                                         <div className="retTimes">
-                                            <span>{entryValue.retTimes[0]} - {entryValue.retTimes[1]}</span>
+                                            <div className="travelTime" style={{margin: '10px'}}>
+                                                <span><b>Return Travel Time: {entryValue.retFlightLen}</b></span>
+                                            </div>
                                             <div className="stops">
                                                 <h3>{entryValue.layoversFrom.layoverCount === 'nonstop' ? 'Nonstop' : entryValue.layoversFrom.layoverCount.slice(0, 1) === "1" ? `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layover` : `${entryValue.layoversFrom.layoverCount.slice(0, 1)} Layovers`}</h3>
                                                 <div className="layover">
@@ -270,11 +294,9 @@ export default function Form() {
                                                 ))}
                                                 </div>
                                             </div>                                           
-                                            <span><b>Return Travel Time: {entryValue.retFlightLen}</b></span>
-                                            <div className="date">
-                                                <span>{MonthFirstDate(values.retDate)}</span>
-                                            </div>
                                         </div>
+                                        <h2 style={{margin: '0px', fontSize: '20px'}}>To {entryValue.ports['retL'][0]}</h2>
+                                        <h4 style={{margin: '0px'}}>({entryValue.ports['retL'][1]})</h4>
                                     </div>
                                 </div>
                                 <div className="pricing">

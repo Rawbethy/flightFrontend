@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useContext, useRef} from 'react';
 import {ContextData} from '../../App'
 import '../styles/form.css'
-import { exit } from 'process';
 
 const AutofillInput = ({dest}: {dest: string}) => {
 
@@ -13,11 +12,7 @@ const AutofillInput = ({dest}: {dest: string}) => {
     const [currListLen, setCurrListLen] = useState<number>(-1);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     
-    const contextData = useContext(ContextData);
-    const portDict: {[key: string]: string[]} = contextData?.portDict || {};
-    const {setValues} = contextData || {
-        setValues: () => {}
-    }
+    const {setValues, portDict} = useContext(ContextData);
 
     const getCurrListLen = (list: string[]) => {
         var len = 0;
