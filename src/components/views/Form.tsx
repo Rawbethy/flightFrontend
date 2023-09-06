@@ -152,7 +152,7 @@ export default function Form() {
         e.preventDefault();
         try {
             setIsLoading(true);
-            const res = await axios.post('http://ec2-18-188-4-231.us-east-2.compute.amazonaws.com:8080/airlineAPI', {
+            const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
                 depPort: values.depPort,
                 arrPort: values.arrPort,
                 depDate: values.depDate,
