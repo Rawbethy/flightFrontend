@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useContext, ChangeEventHandler, ChangeEvent, FormEventHandler, FormEvent} from 'react';
+import React, {useState, useEffect, useContext, ChangeEvent, FormEvent} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {UserData} from '../../App'
 import '../styles/login.css'
 
@@ -8,6 +9,8 @@ interface Credentials {
 }
 
 export default function Login() {
+
+    const navigate = useNavigate();
 
     const formStyles: React.CSSProperties = {
         position: 'relative',
@@ -66,9 +69,9 @@ export default function Login() {
                         </div>
                         <input type='password' className='textBox' id='textBox' name='password' value={creds.password} placeholder='Password' onChange={updateState}/>
                     </div>
-                    <button type='submit' className='submitButtonLogin'>Login</button>
+                    <button type='submit' className='submitButton'>Login</button>
                     <div className="signupOption">
-                        <p>Don't have an account? <a href="/singup">Signup</a></p>
+                        <p>Don't have an account? <u><a onClick={() => navigate('/signup')}>Signup</a></u></p>
                     </div>
                 </div>
             </form>

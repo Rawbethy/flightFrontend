@@ -15,7 +15,7 @@
     margin-bottom: 4%;
 }
 
-.submitButtonLogin {
+.submitButton {
     opacity: 1;
     background-color: green;
     color: white;
@@ -28,7 +28,7 @@
     transition: opacity 0.2s ease-in-out;
 }
 
-.submitButtonLogin:hover {
+.submitButton:hover {
     cursor: pointer;
     opacity: .6
 }
@@ -43,7 +43,7 @@
     margin: 0px;
 }
 
-.signupOption a:hover {
+.signupOption a:hover, .signupOption u:hover {
     cursor: pointer;
     color: green
 }
