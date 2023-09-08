@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, FormEvent} from 'react';
 import { BeatLoader } from 'react-spinners';
 import AutofillInput from '../Utils/autofill';
-import {IContextData, ContextData, UserData} from '../../App'
+import {ContextData, UserData} from '../../App'
 import {DateFormat, AddDays, MonthFirstDate} from '../Utils/DateFormat';
 import axios from 'axios';
 
@@ -56,7 +56,7 @@ const formStyles: React.CSSProperties = window.innerWidth < 768 ? {
     padding: '40px',
     width: '50%',
     minWidth: '350px',
-    height: '200px'
+    height: '20vh'
 }
 
 export default function Form() {
@@ -257,9 +257,7 @@ export default function Form() {
                     <div className="errorMsg">
                         {errors.dates && <span style={{position: 'relative', color: 'red', fontSize: '14px', padding: '10px 0'}}>{errors.dates}</span> }
                     </div>
-                    <div className="submitButton">
-                        <button type='submit' onClick={handleSubmit}>Submit</button>
-                    </div>
+                    <button className='submitButton' type='submit' onClick={handleSubmit}>Submit</button>
                 </form>
             </div>
             {isLoading ? (
