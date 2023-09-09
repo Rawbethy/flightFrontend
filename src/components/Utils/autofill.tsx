@@ -46,7 +46,9 @@ const AutofillInput = ({dest}: {dest: string}) => {
             setCitiesList(cities);
             setDropdownVisible(cities.length > 0);
             setCurrListLen(getCurrListLen(cities));
-        } catch {}
+        } catch (err) {
+            console.log('Error: ', err)
+        }
 
     };
 

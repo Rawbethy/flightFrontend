@@ -31,11 +31,13 @@ interface CardInfo {
         layoverLengths: string[]
     },
     link: string,
+    resultID: string,
     price: string
 }
 
 const commonFormStyles: React.CSSProperties = {
     position: 'relative',
+    height: '35vh',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: '30px',
@@ -49,14 +51,12 @@ const formStyles: React.CSSProperties = window.innerWidth < 768 ? {
     ...commonFormStyles,
     padding: '10px',
     width: '85%',
-    minWidth: '50px',
-    height: '35vh'
+    minWidth: '50px'
 } : {
     ...commonFormStyles,
     padding: '40px',
     width: '50%',
-    minWidth: '350px',
-    height: '20vh'
+    minWidth: '350px'
 }
 
 export default function Form() {
@@ -215,6 +215,9 @@ export default function Form() {
     useEffect(() => {
         setValues(values);
         setResults(results);
+        Object.keys(results).map((key, i) => (
+            console.log(results[key])
+        ))
     }, [values, results]);
 
     const currDate = DateFormat(new Date());
