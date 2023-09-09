@@ -90,3 +90,15 @@ ul#Buttons button:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
 }
+
+.welcome {
+    display: flex;
+    align-items: center;
+    margin-left: 2%;
+    width: auto;
+}
+
+.welcome p {
+    color: white;
+    font-size: 20px;
+}

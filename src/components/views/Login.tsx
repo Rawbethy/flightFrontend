@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useContext, ChangeEvent, FormEvent} from 'react';
+import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
-import {UserData} from '../../App'
-import '../styles/login.css'
+import {UserData} from '../../App';
+import '../styles/login.css';
 
 interface Credentials {
     username: string,
@@ -11,6 +12,7 @@ interface Credentials {
 export default function Login() {
 
     const navigate = useNavigate();
+    const {userStatus, setUserStatus} = useContext(UserData);
 
     const formStyles: React.CSSProperties = {
         position: 'relative',
@@ -37,14 +39,35 @@ export default function Login() {
         }))
     }
 
-    const submit = (e: FormEvent<HTMLFormElement>) => {
+    const submit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(creds);
+        try {
+            const res = await axios.post('https://flightapi.robert-duque.com:8080/login', {
+                username: creds.username,
+                password: creds.password
+            });
+
+            if(res.data.status) {
+                setUserStatus((prevState) => ({
+                    ...prevState,
+                    username: creds.username,
+                    status: true
+                }))
+                navigate('/')
+            }
+            else {
+                alert(res.data.message)
+            }
+        }
+        catch (error) {
+            alert(error)
+        }
     }
 
     useEffect(() => {
         setCreds(creds);
-    }, [,creds])
+        setUserStatus(userStatus)
+    }, [, userStatus, creds])
 
     const userData = useContext(UserData);
     if(!userData) {

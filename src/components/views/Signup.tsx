@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useContext, FormEvent, ChangeEvent} from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import {UserData} from '../../App';
 import '../styles/signup.css'
@@ -14,18 +15,22 @@ const formStyles: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'center',
     margin: 'auto',
-    height: '250px',
-    width: '350px',
+    height: 'auto',
+    width: '300px',
     maxWidth: '450px',
     borderRadius: '10px',
     borderStyle: 'solid',
     borderColor: 'rgba(245, 245, 245, 0.648)',
     borderWidth: '4px',
-    transform: 'translateY(50%)'
+    transform: 'translateY(50%)',
+    padding: '20px 40px 40px 40px'
 }
 
 export default function SignUp() {
 
+    const navigate = useNavigate();
+
+    // const [isLoading, setIsLoading] = useState(false);
     const {userStatus, setUserStatus} = useContext(UserData);
     const [creds, setCreds] = useState<Credentials>({
         email: '',
@@ -49,7 +54,14 @@ export default function SignUp() {
                 email: creds.email,
                 password: creds.password
             });
-            console.log(res.data.message)       
+            if(res.data.status) {
+                setUserStatus((prevState) => ({
+                    ...prevState,
+                    username: creds.username,
+                    status: true
+                }))
+                navigate('/')
+            }     
         } catch (error) {
             alert(error);
         }
@@ -58,7 +70,7 @@ export default function SignUp() {
     useEffect(() => {
         setCreds(creds)
         setUserStatus(userStatus);
-    }, [creds ,userStatus])
+    }, [creds, userStatus])
 
     return (
         <div className="signupMain">
@@ -82,7 +94,7 @@ export default function SignUp() {
                         </div>
                         <input type="password" className='textBox' id='textBox' name='password' value={creds.password} placeholder='Password' onChange={updateState}/>
                     </div>
-                    <button type='submit' className='submitButton' style={{width: 'auto'}}>Sign Up</button>                    
+                    <button type='submit' className='submitButton' style={{width: 'auto', marginTop: '30px', marginBottom: '30px'}}>Sign Up</button>                    
                 </div>
             </form>
         </div>

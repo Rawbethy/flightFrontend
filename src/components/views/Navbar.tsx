@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {UserData} from '../../App';
 import '../styles/navbar.css';
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const {userStatus, setUserStatus} = useContext(UserData);
 
     const hideNav = () => {
         let theEnd = 0;
@@ -23,22 +25,50 @@ const Navbar = () => {
         }
     }
 
+    const signOut = () => {
+        setUserStatus((prevState) => ({
+            ...prevState,
+            username: null,
+            status: false
+        }));
+        navigate('/');
+    }
+
     useEffect(() => {
         hideNav();
     }, [])
 
-  return (
-    <div className="nav">
-        <nav id='navbar'>
-            <ul id='Buttons'>
-                <li><button onClick={(() => navigate('/'))}>Home</button></li>
-            </ul>
-            <ul id='login'>
-              <li><button id='SignIn' onClick={(() => navigate('/login'))}>Sign In</button></li>
-            </ul>
-        </nav>
-    </div>
-  )
+
+    if(userStatus.status) {
+        return (
+            <div className="nav">
+                <nav id='navbar'>
+                    <ul id='Buttons'>
+                        <li><button onClick={(() => navigate('/'))}>Home</button></li>
+                    </ul>
+                    <div className="welcome">
+                        <p>Welcome, {userStatus.username}!</p>
+                    </div>
+                    <ul id='login'>
+                        <li><button id='SignOut' onClick={signOut}>Sign Out</button></li>
+                    </ul>
+                </nav>
+            </div>
+        )
+    }
+
+    return (
+        <div className="nav">
+            <nav id='navbar'>
+                <ul id='Buttons'>
+                    <li><button onClick={(() => navigate('/'))}>Home</button></li>
+                </ul>
+                <ul id='login'>
+                <li><button id='SignIn' onClick={(() => navigate('/login'))}>Login</button></li>
+                </ul>
+            </nav>
+        </div>
+    )
 }
 
 export default Navbar
