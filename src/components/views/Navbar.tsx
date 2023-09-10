@@ -31,7 +31,7 @@ const Navbar = () => {
             username: null,
             status: false
         }));
-        navigate('/');
+        window.location.reload();
     }
 
     useEffect(() => {

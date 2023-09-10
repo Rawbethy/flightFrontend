@@ -16,14 +16,14 @@ const formStyles: React.CSSProperties = {
     justifyContent: 'center',
     margin: 'auto',
     height: 'auto',
-    width: '300px',
+    width: '350px',
     maxWidth: '450px',
     borderRadius: '10px',
     borderStyle: 'solid',
     borderColor: 'rgba(245, 245, 245, 0.648)',
     borderWidth: '4px',
     transform: 'translateY(50%)',
-    padding: '20px 40px 40px 40px'
+    padding: '0px 30px 0px 30px'
 }
 
 export default function SignUp() {
@@ -75,7 +75,8 @@ export default function SignUp() {
     return (
         <div className="signupMain">
             <form onSubmit={submitForm} style={formStyles}>
-                <div className="fromMain">
+                <div className="formMain">
+                    <h2>Sign Up: </h2>
                     <div className="inputBox">
                         <div className="inputLabel">
                             <label>Email</label>

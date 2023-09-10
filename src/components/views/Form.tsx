@@ -51,12 +51,13 @@ const formStyles: React.CSSProperties = window.innerWidth < 768 ? {
     ...commonFormStyles,
     padding: '10px',
     width: '85%',
-    minWidth: '50px'
+    minWidth: '300px'
 } : {
     ...commonFormStyles,
     padding: '40px',
     width: '50%',
-    minWidth: '350px'
+    minWidth: '350px',
+    maxWidth: '700px'
 }
 
 export default function Form() {
@@ -197,13 +198,25 @@ export default function Form() {
             }))
             try {
                 setIsLoading(true);
-                const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
-                    depPort: values.depPort,
-                    arrPort: values.arrPort,
-                    depDate: values.depDate,
-                    retDate: values.retDate
-                });
-                setResults(res.data);        
+                if(userStatus.status) {
+                    const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
+                        depPort: values.depPort,
+                        arrPort: values.arrPort,
+                        depDate: values.depDate,
+                        retDate: values.retDate,
+                        username: userStatus.username
+                    });
+                    setResults(res.data);        
+                }
+                else {
+                    const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
+                        depPort: values.depPort,
+                        arrPort: values.arrPort,
+                        depDate: values.depDate,
+                        retDate: values.retDate
+                    });
+                    setResults(res.data);     
+                }
             } catch (error) {
                 alert(error);
             } finally {

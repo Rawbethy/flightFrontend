@@ -261,13 +261,14 @@
 
     .cards {
         width: 100%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .card {
-        width: 80%;
+        width: 80vw;
         height: 240px;
-        min-width: 30px;
-        max-width: 220px;
+        min-width: 300px;
         padding-top: 0px;
         padding-bottom: 0px;
         padding-left: 10px;
