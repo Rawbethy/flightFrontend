@@ -37,19 +37,13 @@ nav li {
     margin-right: 5px;
 }
 
-ul#Buttons {
+ul#left, ul#right {
     display: flex;
     padding-left: 2%;
-    width: auto
+    width: 25%
 }
 
-ul#login {
-    display: flex;
-    padding-right: 2%;
-    width: auto;
-}
-
-ul#login button {
+ul#right button {
     background-color: green;
     padding: 6px;
     width: 120%;
@@ -60,12 +54,12 @@ ul#login button {
     transition: opacity 0.3s ease-in-out;
 }
 
-ul#login button:hover {
+ul#right button:hover {
     cursor: pointer;
     opacity: .8;
 }
 
-ul#Buttons button {
+ul#left button {
     color: white;
     border: none;
     cursor: pointer;
@@ -73,7 +67,7 @@ ul#Buttons button {
     font-size: larger;
 }
 
-ul#Buttons button::after {
+ul#left button::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -86,7 +80,7 @@ ul#Buttons button::after {
     transition: transform 0.35s ease-out;
 }
 
-ul#Buttons button:hover::after {
+ul#left button:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
 }
@@ -94,7 +88,6 @@ ul#Buttons button:hover::after {
 .welcome {
     display: flex;
     align-items: center;
-    margin-left: 2%;
     width: auto;
 }
 

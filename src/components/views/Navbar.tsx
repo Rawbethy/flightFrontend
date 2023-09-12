@@ -43,13 +43,14 @@ const Navbar = () => {
         return (
             <div className="nav">
                 <nav id='navbar'>
-                    <ul id='Buttons'>
+                    <ul id='left'>
                         <li><button onClick={(() => navigate('/'))}>Home</button></li>
                     </ul>
                     <div className="welcome">
                         <p>Welcome, {userStatus.username}!</p>
                     </div>
-                    <ul id='login'>
+                    <ul id='right'>
+                        <li><button id='Records' onClick={() => navigate('/Recents')}>Price Tracking</button></li>
                         <li><button id='SignOut' onClick={signOut}>Sign Out</button></li>
                     </ul>
                 </nav>
@@ -60,10 +61,10 @@ const Navbar = () => {
     return (
         <div className="nav">
             <nav id='navbar'>
-                <ul id='Buttons'>
+                <ul id='left'>
                     <li><button onClick={(() => navigate('/'))}>Home</button></li>
                 </ul>
-                <ul id='login'>
+                <ul id='right'>
                 <li><button id='SignIn' onClick={(() => navigate('/login'))}>Login</button></li>
                 </ul>
             </nav>

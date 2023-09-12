@@ -62,9 +62,9 @@ export default function App() {
 
   const [portDict, setPortDict] = useState<IContextData['portDict']>({});
 
-  const [userStatus, setUserStatus] = useState<IUserData['userStatus']>({
-    username: null,
-    status: false
+  const [userStatus, setUserStatus] = useState<IUserData['userStatus']>(() => {
+    const storedUserStatus = localStorage.getItem('userStatus');
+    return storedUserStatus ? JSON.parse(storedUserStatus) : { username: null, status: false };
   });
 
   useEffect(() => {
@@ -83,6 +83,11 @@ export default function App() {
     setValues(values);
     setPortDict(portDict);
   }, [values, portDict])
+
+  useEffect(() => {
+    // Store userStatus in Local Storage whenever it changes
+    localStorage.setItem('userStatus', JSON.stringify(userStatus));
+  }, [userStatus]);
 
   return (
     <UserData.Provider value={{userStatus, setUserStatus}}>
