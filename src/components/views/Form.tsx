@@ -129,6 +129,10 @@ export default function Form() {
     });
 
     const [results, setResults] = useState<Record<string, CardInfo>>({});
+    const [noResults, setNoResults] = useState({
+        res: true,
+        resMessage: ''
+    })
     const [sortingOption, setSortingOption] = useState("priceL2H");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -203,22 +207,44 @@ export default function Form() {
                     // const res = await axios.post('http://localhost:8080/airlineAPI', {
                     const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
                         depPort: values.depPort,
+                        depCity: values.depCity,
                         arrPort: values.arrPort,
+                        arrCity: values.arrCity,
                         depDate: values.depDate,
                         retDate: values.retDate,
                         username: userStatus.username
                     });
-                    setResults(res.data);        
+                    if(res.data.message) {
+                        setNoResults((prevRes) => ({
+                            ...prevRes,
+                            res: false,
+                            resMessage: res.data.message
+                        }))
+                    }
+                    else {
+                        setResults(res.data);        
+                    }
                 }
                 else {
                     // const res = await axios.post('http://localhost:8080/airlineAPI', {
                     const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
                         depPort: values.depPort,
                         arrPort: values.arrPort,
+                        depCity: values.depCity,
+                        arrCity: values.arrCity,
                         depDate: values.depDate,
                         retDate: values.retDate
                     });
-                    setResults(res.data);     
+                    if(res.data.message) {
+                        setNoResults((prevRes) => ({
+                            ...prevRes,
+                            res: false,
+                            resMessage: res.data.message
+                        }))
+                    }
+                    else {
+                        setResults(res.data);     
+                    }
                 }
             } catch (error) {
                 alert(error);
@@ -231,10 +257,8 @@ export default function Form() {
     useEffect(() => {
         setValues(values);
         setResults(results);
-        Object.keys(results).map((key, i) => (
-            console.log(results[key])
-        ))
-    }, [values, results]);
+        setNoResults(noResults);
+    }, [values, results, noResults]);
 
     const currDate = DateFormat(new Date());
     
@@ -282,6 +306,10 @@ export default function Form() {
             {isLoading ? (
                 <div className="loadingCircle">
                     <BeatLoader color="white" loading={isLoading} size={15}/>
+                </div>
+            ) : !noResults.res ? (
+                <div className="noResults">
+                    <h1 style={{color: 'white'}}>No results from search, please try again!</h1>
                 </div>
             ) : (
                 Object.keys(results).length !== 0 && (

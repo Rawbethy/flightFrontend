@@ -6,6 +6,7 @@ import './App.css';
 
 import siteRoutes from './Routes';
 import Navbar from './components/views/Navbar';
+import { flushSync } from 'react-dom';
 
 export interface IContextData {
   portDict: {[key: string]: string[]},
@@ -15,7 +16,9 @@ export interface IContextData {
     depDate: string,
     arrCity: string,
     arrPort: string | string[],
-    retDate: string
+    retDate: string,
+    noResultsBoolean: boolean,
+    noResults: string
   },
   setValues: React.Dispatch<React.SetStateAction<IContextData['values']>>;
 }
@@ -36,7 +39,9 @@ export const ContextData = createContext<IContextData>({
     depDate: DateFormat(new Date()),
     arrCity: '',
     arrPort: '',
-    retDate: DateFormat(new Date())
+    retDate: DateFormat(new Date()),
+    noResultsBoolean: false,
+    noResults: ''
   },
   setValues: () => {}
 });
@@ -57,7 +62,9 @@ export default function App() {
     depDate: DateFormat(new Date()),
     arrCity: '',
     arrPort: '',
-    retDate: DateFormat(new Date())
+    retDate: DateFormat(new Date()),
+    noResultsBoolean: false,
+    noResults: ''
   });
 
   const [portDict, setPortDict] = useState<IContextData['portDict']>({});
@@ -71,7 +78,7 @@ export default function App() {
     const fetchDict = async() => {
       try {
         // const res = await axios.get('http://localhost:8080/airlineCodes');
-        const res = await axios.get('s://flightapi.robert-duque.com:8080/airlineCodes');
+        const res = await axios.get('https://flightapi.robert-duque.com:8080/airlineCodes');
         if(res.data) {
           const newData: {[key: string]: string[]} = res.data
           setPortDict(newData);

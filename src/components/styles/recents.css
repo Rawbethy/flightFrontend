@@ -1,0 +1,25 @@
+.historyMain {
+    margin: 5% 0 0 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.historyTable {
+    color: white;
+    width: 80vw;
+    min-width: 800px;
+}
+
+.historyTable thead {
+    height: 5%
+}
+
+tbody tr {
+    height: 50px;
+}
+
+tbody tr td {
+    text-align: left;
+}
