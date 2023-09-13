@@ -49,6 +49,7 @@ export default function SignUp() {
     const submitForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
+            // const res = await axios.post('http://localhost:8080/register', {
             const res = await axios.post('https://flightapi.robert-duque.com:8080/register', {
                 username: creds.username,
                 email: creds.email,

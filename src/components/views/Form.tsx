@@ -37,7 +37,8 @@ interface CardInfo {
 
 const commonFormStyles: React.CSSProperties = {
     position: 'relative',
-    height: '35vh',
+    height: '20vh',
+    minHeight: '300px',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: '30px',
@@ -199,6 +200,7 @@ export default function Form() {
             try {
                 setIsLoading(true);
                 if(userStatus.status) {
+                    // const res = await axios.post('http://localhost:8080/airlineAPI', {
                     const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
                         depPort: values.depPort,
                         arrPort: values.arrPort,
@@ -209,6 +211,7 @@ export default function Form() {
                     setResults(res.data);        
                 }
                 else {
+                    // const res = await axios.post('http://localhost:8080/airlineAPI', {
                     const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
                         depPort: values.depPort,
                         arrPort: values.arrPort,

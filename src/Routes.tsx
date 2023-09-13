@@ -12,7 +12,7 @@ const siteRoutes : Route[] = [
     {path: '/', component: Form},
     {path: '/signup', component: SignUp},
     {path: '/login', component: Login},
-    {path: '/recentSearches', component: Recents}
+    {path: '/prevSearches', component: Recents}
 ]
 
 export default siteRoutes;

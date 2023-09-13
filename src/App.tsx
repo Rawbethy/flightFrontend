@@ -69,12 +69,16 @@ export default function App() {
 
   useEffect(() => {
     const fetchDict = async() => {
-        axios.get('https://flightapi.robert-duque.com:8080/airlineCodes').then(res => {
+      try {
+        // const res = await axios.get('http://localhost:8080/airlineCodes');
+        const res = await axios.get('s://flightapi.robert-duque.com:8080/airlineCodes');
+        if(res.data) {
           const newData: {[key: string]: string[]} = res.data
           setPortDict(newData);
-        }).catch(err => {
-          console.log(err)
-        })
+        }
+      } catch(err) {
+        console.log(err)
+      }
     }
     fetchDict();
   }, [])

@@ -44,14 +44,14 @@ const Navbar = () => {
             <div className="nav">
                 <nav id='navbar'>
                     <ul id='left'>
-                        <li><button onClick={(() => navigate('/'))}>Home</button></li>
+                        <li><button className='navButton' onClick={(() => navigate('/'))}>Home</button></li>
                     </ul>
                     <div className="welcome">
                         <p>Welcome, {userStatus.username}!</p>
                     </div>
                     <ul id='right'>
-                        <li><button id='Records' onClick={() => navigate('/Recents')}>Price Tracking</button></li>
-                        <li><button id='SignOut' onClick={signOut}>Sign Out</button></li>
+                        <li><button className='navButton' id='Records' onClick={() => navigate('/prevSearches')}>Price Tracking</button></li>
+                        <li><button className='logout' id='Logout' onClick={signOut}>Logout</button></li>
                     </ul>
                 </nav>
             </div>
@@ -62,10 +62,10 @@ const Navbar = () => {
         <div className="nav">
             <nav id='navbar'>
                 <ul id='left'>
-                    <li><button onClick={(() => navigate('/'))}>Home</button></li>
+                    <li><button className='navButton' onClick={(() => navigate('/'))}>Home</button></li>
                 </ul>
                 <ul id='right'>
-                <li><button id='SignIn' onClick={(() => navigate('/login'))}>Login</button></li>
+                    <li><button className='login' onClick={(() => navigate('/login'))}>Login</button></li>
                 </ul>
             </nav>
         </div>

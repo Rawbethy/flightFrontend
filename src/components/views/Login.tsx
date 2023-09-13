@@ -42,6 +42,7 @@ export default function Login() {
     const submit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
+            // const res = await axios.post('http://localhost:8080/login', {
             const res = await axios.post('https://flightapi.robert-duque.com:8080/login', {
                 username: creds.username,
                 password: creds.password
