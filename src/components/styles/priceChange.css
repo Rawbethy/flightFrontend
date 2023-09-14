@@ -1,4 +1,4 @@
-.historyMain {
+.priceChangeMain {
     margin: 5vh 0 0 0;
     min-height: 100vh;
     display: flex;
@@ -6,20 +6,11 @@
     align-items: flex-start;
 }
 
-.historyTable {
-    color: white;
+.priceChangeTable {
     width: 80vw;
     min-width: 800px;
 }
 
-.historyTable thead {
-    height: 5%
-}
-
-tbody tr {
-    height: 50px;
-}
-
-tbody tr td {
-    text-align: left;
+.priceRow {
+    height: auto;
 }

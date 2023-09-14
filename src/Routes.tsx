@@ -2,7 +2,7 @@ import Form from './components/views/Form';
 import Login from './components/views/Login';
 import SignUp from './components/views/Signup';
 import Recents from './components/views/Recents';
-import RecentsData from './components/views/RecentsData'
+import PriceChange from './components/views/PriceChange'
 
 interface Route {
     path: string,
@@ -14,7 +14,7 @@ const siteRoutes : Route[] = [
     {path: '/signup', component: SignUp},
     {path: '/login', component: Login},
     {path: '/prevSearches', component: Recents},
-    {path: '/prevSearches/:urlID', component: RecentsData}
+    {path: '/prevSearches/:urlID', component: PriceChange}
 ]
 
 export default siteRoutes;
