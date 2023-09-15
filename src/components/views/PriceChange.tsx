@@ -27,8 +27,8 @@ export default function PriceChange() {
     useEffect(() => {
         const getData = async () => {
             try {
-                // const res = await axios.post('https://flightapi.robert-duque.com:8080/getPrices', {
-                const res = await axios.post('http://localhost:8080/getPrices', {
+                const res = await axios.post('https://flightapi.robert-duque.com:8080/getPrices', {
+                // const res = await axios.post('http://localhost:8080/getPrices', {
                     urlID: urlID 
                 })
                 console.log(res.data);
