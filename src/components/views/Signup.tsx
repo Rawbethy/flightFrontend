@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext, FormEvent, ChangeEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {BeatLoader} from 'react-spinners';
 import axios from 'axios';
 import {UserData} from '../../App';
 import '../styles/signup.css'
@@ -30,8 +31,24 @@ export default function SignUp() {
 
     const navigate = useNavigate();
 
-    // const [isLoading, setIsLoading] = useState(false);
+    const validateEmail = (email: string) => {
+        const re =  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if (!email.toLowerCase().match(re)) {
+            setErrors((prevState) => ({
+                ...prevState,
+                email: 'Email is not valid!'
+            }));
+            return false;
+        }
+        return true;
+    }
+
+    const [isLoading, setIsLoading] = useState(false);
     const {userStatus, setUserStatus} = useContext(UserData);
+    const [errors, setErrors] = useState({
+        email: '',
+        username: ''
+    })
     const [creds, setCreds] = useState<Credentials>({
         email: '',
         username: '',
@@ -49,29 +66,48 @@ export default function SignUp() {
     const submitForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // const res = await axios.post('http://localhost:8080/register', {
-            const res = await axios.post('https://flightapi.robert-duque.com:8080/register', {
-                username: creds.username,
-                email: creds.email,
-                password: creds.password
-            });
-            if(res.data.status) {
-                setUserStatus((prevState) => ({
+            if(validateEmail(creds.email)) {
+                setErrors((prevState) => ({
                     ...prevState,
-                    username: creds.username,
-                    status: true
+                    email: '',
+                    username: ''
                 }))
-                navigate('/')
-            }     
+                setIsLoading(true)
+                // const res = await axios.post('http://localhost:8080/register', {
+                const res = await axios.post('https://flightapi.robert-duque.com:8080/register', {
+                    username: creds.username,
+                    email: creds.email,
+                    password: creds.password
+                });
+                if(res.data.status) {
+                    setUserStatus((prevState) => ({
+                        ...prevState,
+                        username: creds.username,
+                        status: true
+                    }))
+                    navigate('/')
+                }
+                else {
+                    setErrors((prevState) => ({
+                        ...prevState,
+                        username: res.data.message
+                    }))
+                }  
+            }
         } catch (error) {
             alert(error);
+        }
+        finally {
+            setIsLoading(false);
         }
     }
 
     useEffect(() => {
-        setCreds(creds)
+        setCreds(creds);
         setUserStatus(userStatus);
-    }, [creds, userStatus])
+        setErrors(errors);
+        setIsLoading(isLoading);
+    }, [creds, userStatus, errors, isLoading])
 
     return (
         <div className="signupMain">
@@ -83,12 +119,18 @@ export default function SignUp() {
                             <label>Email</label>
                         </div>
                         <input type="text" className='textBox' id='textBox' name='email' value={creds.email} placeholder='Email' onChange={updateState}/>
+                        {errors.email && (
+                            <div style={{color: 'red'}}>{errors.email}</div>
+                        )}                           
                     </div>
                     <div className="inputBox">
                         <div className="inputLabel">
                             <label>Username</label>
                         </div>
                         <input type="text" className='textBox' id='textBox' name='username' value={creds.username} placeholder='Username' onChange={updateState}/>
+                        {errors.username && (
+                            <div style={{color: 'red'}}>{errors.username}</div>
+                        )}                        
                     </div>
                     <div className="inputBox">
                         <div className="inputLabel">
@@ -96,7 +138,7 @@ export default function SignUp() {
                         </div>
                         <input type="password" className='textBox' id='textBox' name='password' value={creds.password} placeholder='Password' onChange={updateState}/>
                     </div>
-                    <button type='submit' className='submitButton' style={{width: 'auto', marginTop: '30px', marginBottom: '30px'}}>Sign Up</button>                    
+                    <button type='submit' className='submitButton' style={{width: 'auto', marginTop: '30px', marginBottom: '30px'}}>{isLoading ? <BeatLoader color="white" loading={isLoading} size={12}/> : 'Sign Up'}</button>                    
                 </div>
             </form>
         </div>
