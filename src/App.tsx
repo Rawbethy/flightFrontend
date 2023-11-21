@@ -2,7 +2,7 @@ import React, {useState, useEffect, createContext} from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {CookiesProvider} from 'react-cookie';
 import {DateFormat} from './components/Utils/DateFormat';
-import axios from 'axios';
+import createInstance from './components/Utils/APICalls';
 import './App.css';
 
 import siteRoutes from './Routes';
@@ -46,8 +46,8 @@ export default function App() {
     noResults: ''
   });
 
+  const airlineCodesAPI = createInstance('airlineCodes', null);
   const [portDict, setPortDict] = useState<IContextData['portDict']>({});
-
   const [userStatus, setUserStatus] = useState<IUserData['userStatus']>(() => {
     const storedUserStatus = localStorage.getItem('userStatus');
     return storedUserStatus ? JSON.parse(storedUserStatus) : { username: null, status: false };
@@ -56,8 +56,7 @@ export default function App() {
   useEffect(() => {
     const fetchDict = async() => {
       try {
-        const res = await axios.get('http://localhost:8080/airlineCodes');
-        // const res = await axios.get('https://flightapi.robert-duque.com:8080/airlineCodes');
+        const res = await airlineCodesAPI.instance.get(airlineCodesAPI.url);
         if(res.data) {
           const newData: {[key: string]: string[]} = res.data
           setPortDict(newData);

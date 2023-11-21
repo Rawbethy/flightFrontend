@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext, FormEvent, ChangeEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {BeatLoader} from 'react-spinners';
-import axios from 'axios';
 import {UserData} from '../../App';
+import createInstance from '../Utils/APICalls';
 import '../styles/signup.css'
 
 interface Credentials {
@@ -30,6 +30,7 @@ const formStyles: React.CSSProperties = {
 export default function SignUp() {
 
     const navigate = useNavigate();
+    const registerAPI = createInstance('register', null);
 
     const validateEmail = (email: string) => {
         const re =  /^(([^<>()[\]\.,;:\s@"]+(\.[^<>()[\]\.,;:\s@"]+)*)|"(.+)")@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
@@ -73,8 +74,7 @@ export default function SignUp() {
                     username: ''
                 }))
                 setIsLoading(true)
-                // const res = await axios.post('http://localhost:8080/register', {
-                const res = await axios.post('https://flightapi.robert-duque.com:8080/register', {
+                const res = await registerAPI.instance.post(registerAPI.url, {
                     username: creds.username,
                     email: creds.email,
                     password: creds.password

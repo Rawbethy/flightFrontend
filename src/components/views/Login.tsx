@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useContext, ChangeEvent, FormEvent} from 'react';
-import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import {UserData} from '../../App';
@@ -16,7 +15,7 @@ export default function Login() {
     
     const navigate = useNavigate();
     const {userStatus, setUserStatus} = useContext(UserData);
-    const [cookies, setCookie, removeCookie] = useCookies(['token', 'username']);
+    const [cookies, setCookie, removeCookie] = useCookies(['token']);
     const loginAPI = createInstance('login', cookies.token);
 
     const formStyles: React.CSSProperties = {
@@ -47,8 +46,7 @@ export default function Login() {
     const submit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // const res = await loginAPI.post('http://localhost:8080/login', {
-            const res = await loginAPI.post('https://flightapi.robert-duque.com:8080/login', {
+            const res = await loginAPI.instance.post(loginAPI.url, {
                 username: creds.username,
                 password: creds.password
             });
@@ -59,7 +57,6 @@ export default function Login() {
                     username: creds.username,
                     status: true
                 }))
-                setCookie('username', creds.username, {path: '/'});
                 setCookie('token', res.data.token, {path: '/'})
                 navigate('/')
             }
@@ -81,7 +78,6 @@ export default function Login() {
     if(!userData) {
         return <div>Loading or error handling...</div>
     }
-    // const {setUserStatus} = userData;
 
     return (
         <div className="loginMain">

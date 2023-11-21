@@ -1,37 +1,21 @@
 import axios from 'axios';
-import {useCookies} from 'react-cookie';
 
 const baseURL = 'http://localhost:8080';
+// const baseURL = 'https://flightapi.robert-duque.com:8080';
 
 const createInstance = (url: string, token: string | null) => {
   const newURL = `${url !== '' ? `${baseURL}/${url}` : `${baseURL}`}`
-  return axios.create({
-    baseURL: `${newURL}`,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `${token}` 
-    }
-  });
+  return {
+    instance: 
+      axios.create({
+        baseURL: `${newURL}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}` 
+        }
+      }),
+    url: newURL
+  };
 };
 
 export default createInstance;
-
-// export default function axiosAPIs() {
-//     const baseURL = 'http://localhost:8080';
-    
-//     const createInstance = (url: string, token: string | null) => {
-//         const newURL = `${url !== '' ? `${baseURL}/${url}` : `${baseURL}`}`
-//         return axios.create({
-//           baseURL: `${newURL}`,
-//           headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': `${token}` 
-//           }
-//         });
-//     };
-//     const airlineAPI = createInstance('url', null);
-//     const registerAPI = createInstance('register', cookies.token);
-//     const loginAPI = createInstance('login', cookies.token);
-//     const getPricesAPI = createInstance('getPrices', cookies.token);
-//     const getHistoryAPI = createInstance('getHistory', cookies.token);
-// }

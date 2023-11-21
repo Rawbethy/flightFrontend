@@ -1,11 +1,13 @@
 import React, {useEffect, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
 import {UserData} from '../../App';
 import '../styles/navbar.css';
 
 const Navbar = () => {
     const navigate = useNavigate();
     const {userStatus, setUserStatus} = useContext(UserData);
+    const [cookies, setCookie, removeCookie] = useCookies(['token']);
 
     const hideNav = () => {
         let theEnd = 0;
@@ -25,12 +27,13 @@ const Navbar = () => {
         }
     }
 
-    const signOut = () => {
+    const handleLogout = () => {
         setUserStatus((prevState) => ({
             ...prevState,
             username: null,
             status: false
         }));
+        removeCookie('token');
         navigate('/');
         window.location.reload();
     }
@@ -52,7 +55,7 @@ const Navbar = () => {
                     </div>
                     <ul id='right'>
                         <li><button className='navButton' id='Records' onClick={() => navigate('/prevSearches')}>Price Tracking</button></li>
-                        <li><button className='logout' id='Logout' onClick={signOut}>Logout</button></li>
+                        <li><button className='logout' id='Logout' onClick={handleLogout}>Logout</button></li>
                     </ul>
                 </nav>
             </div>

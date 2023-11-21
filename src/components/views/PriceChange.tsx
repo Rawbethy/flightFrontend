@@ -1,7 +1,8 @@
 import {useState, useEffect, useContext} from 'react';
 import {useParams} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
 import { BeatLoader } from 'react-spinners';
-import axios from 'axios';
+import createInstance from '../Utils/APICalls';
 import '../styles/priceChange.css'
 
 interface RecentData {
@@ -23,15 +24,15 @@ export default function PriceChange() {
     const [data, setData] = useState<Record<string, RecentData>>({});
     const [dbData, setdbData] = useState<Record<string, DBData>>({})
     const [isLoading, setIsLoading] = useState(true);
+    const [cookies] = useCookies(['token'])
+    const pricesAPI = createInstance('getPrices', cookies.token)
 
     useEffect(() => {
         const getData = async () => {
             try {
-                const res = await axios.post('https://flightapi.robert-duque.com:8080/getPrices', {
-                // const res = await axios.post('http://localhost:8080/getPrices', {
+                const res = await pricesAPI.instance.post(pricesAPI.url, {
                     urlID: urlID 
                 })
-                console.log(res.data);
                 setData(res.data.pricesAndInfo);
                 setdbData(res.data.dbData);
             }

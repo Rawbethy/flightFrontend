@@ -1,10 +1,10 @@
 import {useState, useEffect, useContext} from 'react';
-import {Navigate, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import {DateFormat} from '../Utils/DateFormat';
 import { BeatLoader } from 'react-spinners';
 import {UserData} from '../../App';
-import axios from 'axios';
+import createInstance from '../Utils/APICalls';
 import '../styles/recents.css'
 
 interface HistoryEntries {
@@ -23,22 +23,12 @@ export default function Recents() {
     const [isLoading, setIsLoading] = useState(true);
     const [history, setHistory] = useState<Record<string, HistoryEntries>>({});
     const [cookies] = useCookies(['token'])
-
-    const axiosInstance = axios.create({
-        // baseURL: 'http://localhost:8080/getHistory',
-        baseURL: 'https://flightapi.robert-duque.com:8080/getHistory',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${cookies.token}` 
-        }
-    })
-
+    const historyAPI = createInstance('getHistory', cookies.token)
 
     useEffect(() => {
         const fetchHistory = async () => {
             try {
-                // const res = await axiosInstance.post('http://localhost:8080/getHistory', {
-                const res = await axios.post('https://flightapi.robert-duque.com:8080/getHistory', {
+                const res = await historyAPI.instance.post(historyAPI.url, {
                     username: userStatus.username
                 });
                 if(res.data) {

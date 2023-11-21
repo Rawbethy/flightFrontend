@@ -5,7 +5,6 @@ import AutofillInput from '../Utils/autofill';
 import {ContextData, UserData} from '../../App'
 import {DateFormat, AddDays, MonthFirstDate} from '../Utils/DateFormat';
 import createInstance from '../Utils/APICalls';
-import axios from 'axios';
 
 import '../styles/form.css'
 
@@ -167,10 +166,6 @@ export default function Form() {
             };
         }
 
-        // setErrors((prevErrors) => ({
-        //     ...prevErrors,
-        //     ...newErrors
-        // }));
         return newErrors;
     }
 
@@ -207,9 +202,7 @@ export default function Form() {
             try {
                 setIsLoading(true);
                 if(userStatus.status) {
-
-                    // const res = await airlineAPI.post('http://localhost:8080/airlineAPI', {
-                    const res = await airlineAPI.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
+                    const res = await airlineAPI.instance.post(airlineAPI.url, {
                         depPort: values.depPort,
                         depCity: values.depCity,
                         arrPort: values.arrPort,
@@ -230,8 +223,7 @@ export default function Form() {
                     }
                 }
                 else {
-                    // const res = await airlineAPI.post('http://localhost:8080/airlineAPI', {
-                    const res = await airlineAPI.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
+                    const res = await airlineAPI.instance.post(airlineAPI.url, {
                         depPort: values.depPort,
                         arrPort: values.arrPort,
                         depCity: values.depCity,
