@@ -32,7 +32,7 @@ export default function SignUp() {
     const navigate = useNavigate();
 
     const validateEmail = (email: string) => {
-        const re =  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const re =  /^(([^<>()[\]\.,;:\s@"]+(\.[^<>()[\]\.,;:\s@"]+)*)|"(.+)")@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
         if (!email.toLowerCase().match(re)) {
             setErrors((prevState) => ({
                 ...prevState,

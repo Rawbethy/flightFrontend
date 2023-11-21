@@ -1,7 +1,9 @@
 import React, {useState, useEffect, useContext, ChangeEvent, FormEvent} from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
 import {UserData} from '../../App';
+import createInstance from '../Utils/APICalls';
 import '../styles/login.css';
 
 interface Credentials {
@@ -11,8 +13,11 @@ interface Credentials {
 
 export default function Login() {
 
+    
     const navigate = useNavigate();
     const {userStatus, setUserStatus} = useContext(UserData);
+    const [cookies, setCookie, removeCookie] = useCookies(['token', 'username']);
+    const loginAPI = createInstance('login', cookies.token);
 
     const formStyles: React.CSSProperties = {
         position: 'relative',
@@ -42,8 +47,8 @@ export default function Login() {
     const submit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // const res = await axios.post('http://localhost:8080/login', {
-            const res = await axios.post('https://flightapi.robert-duque.com:8080/login', {
+            // const res = await loginAPI.post('http://localhost:8080/login', {
+            const res = await loginAPI.post('https://flightapi.robert-duque.com:8080/login', {
                 username: creds.username,
                 password: creds.password
             });
@@ -54,6 +59,8 @@ export default function Login() {
                     username: creds.username,
                     status: true
                 }))
+                setCookie('username', creds.username, {path: '/'});
+                setCookie('token', res.data.token, {path: '/'})
                 navigate('/')
             }
             else {

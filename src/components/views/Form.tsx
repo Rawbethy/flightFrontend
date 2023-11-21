@@ -1,8 +1,10 @@
 import React, {useState, useEffect, useContext, FormEvent} from 'react';
 import { BeatLoader } from 'react-spinners';
+import { useCookies } from 'react-cookie';
 import AutofillInput from '../Utils/autofill';
 import {ContextData, UserData} from '../../App'
 import {DateFormat, AddDays, MonthFirstDate} from '../Utils/DateFormat';
+import createInstance from '../Utils/APICalls';
 import axios from 'axios';
 
 import '../styles/form.css'
@@ -64,7 +66,7 @@ const formStyles: React.CSSProperties = window.innerWidth < 768 ? {
 export default function Form() {
 
     const {values, setValues} = useContext(ContextData);
-    const {userStatus, setUserStatus} = useContext(UserData);
+    const {userStatus} = useContext(UserData);
 
     const parseTime = (timeString: string) => {
         const [time, ampm] = timeString.split(' ');
@@ -127,14 +129,15 @@ export default function Form() {
         arrCity: '',
         dates: '',
     });
-
-    const [results, setResults] = useState<Record<string, CardInfo>>({});
     const [noResults, setNoResults] = useState({
         res: true,
         resMessage: ''
     })
+    const [results, setResults] = useState<Record<string, CardInfo>>({});
     const [sortingOption, setSortingOption] = useState("priceL2H");
     const [isLoading, setIsLoading] = useState(false);
+    const [cookies] = useCookies(['token']);
+    const airlineAPI = createInstance('airlineAPI', cookies.token ? cookies.token : null);
 
     const handleErrors = (depDate: string, retDate: string, depCity: string, arrCity: string) => {
         let newErrors = {
@@ -204,8 +207,9 @@ export default function Form() {
             try {
                 setIsLoading(true);
                 if(userStatus.status) {
-                    // const res = await axios.post('http://localhost:8080/airlineAPI', {
-                    const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
+
+                    // const res = await airlineAPI.post('http://localhost:8080/airlineAPI', {
+                    const res = await airlineAPI.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
                         depPort: values.depPort,
                         depCity: values.depCity,
                         arrPort: values.arrPort,
@@ -226,8 +230,8 @@ export default function Form() {
                     }
                 }
                 else {
-                    // const res = await axios.post('http://localhost:8080/airlineAPI', {
-                    const res = await axios.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
+                    // const res = await airlineAPI.post('http://localhost:8080/airlineAPI', {
+                    const res = await airlineAPI.post('https://flightapi.robert-duque.com:8080/airlineAPI', {
                         depPort: values.depPort,
                         arrPort: values.arrPort,
                         depCity: values.depCity,

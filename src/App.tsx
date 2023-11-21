@@ -1,35 +1,14 @@
-import React, {useState, useEffect, createContext, useContext, SetStateAction} from 'react';
+import React, {useState, useEffect, createContext} from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {CookiesProvider} from 'react-cookie';
 import {DateFormat} from './components/Utils/DateFormat';
 import axios from 'axios';
 import './App.css';
 
 import siteRoutes from './Routes';
 import Navbar from './components/views/Navbar';
-import { flushSync } from 'react-dom';
-
-export interface IContextData {
-  portDict: {[key: string]: string[]},
-  values: {
-    depCity: string,
-    depPort: string | string[],
-    depDate: string,
-    arrCity: string,
-    arrPort: string | string[],
-    retDate: string,
-    noResultsBoolean: boolean,
-    noResults: string
-  },
-  setValues: React.Dispatch<React.SetStateAction<IContextData['values']>>;
-}
-
-export interface IUserData {
-  userStatus: {
-    username: string | null,
-    status: boolean
-  },
-  setUserStatus: React.Dispatch<React.SetStateAction<IUserData['userStatus']>>;
-}
+import IContextData from './components/Utils/Interfaces/ContextData';
+import IUserData from './components/Utils/Interfaces/UserData';
 
 export const ContextData = createContext<IContextData>({
   portDict: {},
@@ -51,7 +30,7 @@ export const UserData = createContext<IUserData>({
     username: null,
     status: false 
   },
-  setUserStatus: () => {}
+  setUserStatus: () => {},
 });
 
 export default function App() {
@@ -77,8 +56,8 @@ export default function App() {
   useEffect(() => {
     const fetchDict = async() => {
       try {
-        // const res = await axios.get('http://localhost:8080/airlineCodes');
-        const res = await axios.get('https://flightapi.robert-duque.com:8080/airlineCodes');
+        const res = await axios.get('http://localhost:8080/airlineCodes');
+        // const res = await axios.get('https://flightapi.robert-duque.com:8080/airlineCodes');
         if(res.data) {
           const newData: {[key: string]: string[]} = res.data
           setPortDict(newData);
@@ -101,19 +80,21 @@ export default function App() {
   }, [userStatus]);
 
   return (
-    <UserData.Provider value={{userStatus, setUserStatus}}>
-      <ContextData.Provider value={{values, portDict, setValues}}>
-        <div className="App">
-          <Router>
-            <Navbar />
-            <Routes>
-              {siteRoutes.map((route, index) => (
-                <Route key={index} path={route.path} Component={route.component}></Route>
-              ))}
-            </Routes>
-          </Router>
-        </div>
-      </ContextData.Provider>
-    </UserData.Provider>
+    <CookiesProvider>
+      <UserData.Provider value={{userStatus, setUserStatus}}>
+        <ContextData.Provider value={{values, portDict, setValues}}>
+          <div className="App">
+            <Router>
+              <Navbar />
+              <Routes>
+                {siteRoutes.map((route, index) => (
+                  <Route key={index} path={route.path} Component={route.component}></Route>
+                ))}
+              </Routes>
+            </Router>
+          </div>
+        </ContextData.Provider>
+      </UserData.Provider>
+    </CookiesProvider>
   );
 }

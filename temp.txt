@@ -1,0 +1,26 @@
+import axios from 'axios';
+
+// Replace 'your_username' and 'your_password' with actual credentials
+const username = 'your_username';
+const password = 'your_password';
+
+// Encode the credentials in base64
+const base64Credentials = btoa(`${username}:${password}`);
+
+// Set up the Axios request
+axios({
+  method: 'get', // Specify the HTTP method (GET, POST, etc.)
+  url: 'https://example.com/api/data', // Replace with your API endpoint
+  headers: {
+    'Authorization': `Basic ${base64Credentials}`,
+    'Content-Type': 'application/json', // Adjust content type as needed
+  },
+})
+  .then(response => {
+    // Handle successful response
+    console.log(response.data);
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error:', error);
+  });
