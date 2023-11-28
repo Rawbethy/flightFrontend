@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext, ChangeEvent, FormEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
+import {BeatLoader} from 'react-spinners';
 import {UserData} from '../../App';
 import createInstance from '../Utils/APICalls';
 import '../styles/login.css';
@@ -16,6 +17,7 @@ export default function Login() {
     const navigate = useNavigate();
     const {userStatus, setUserStatus} = useContext(UserData);
     const [cookies, setCookie, removeCookie] = useCookies(['token']);
+    const [isLoading, setIsLoading] = useState(false);
     const loginAPI = createInstance('login', cookies.token);
 
     const formStyles: React.CSSProperties = {
@@ -46,6 +48,7 @@ export default function Login() {
     const submit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
+            setIsLoading(true);
             const res = await loginAPI.instance.post(loginAPI.url, {
                 username: creds.username,
                 password: creds.password
@@ -66,6 +69,9 @@ export default function Login() {
         }
         catch (error) {
             alert(error)
+        }
+        finally {
+            setIsLoading(false);
         }
     }
 
@@ -96,7 +102,11 @@ export default function Login() {
                         </div>
                         <input type='password' className='textBox' id='textBox' name='password' value={creds.password} placeholder='Password' onChange={updateState}/>
                     </div>
-                    <button type='submit' className='submitButton'>Login</button>
+                    <button type='submit' className='submitButton'>{isLoading ? (
+                        <div>
+                            <BeatLoader color="white" loading={isLoading} size={8}/>
+                        </div>
+                    ) : 'Login'}</button>
                     <div className="signupOption">
                         <p>Don't have an account? <u><a onClick={() => navigate('/signup')}>Signup</a></u></p>
                     </div>
